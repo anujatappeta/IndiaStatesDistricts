@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>State & District Dropdown</title>
+    <script>
+        async function loadStates() {
+            const res = await fetch("/states");
+            const states = await res.json();
+            const stateSelect = document.getElementById("state");
+            stateSelect.innerHTML = "<option value=''>--Select State--</option>";
+
+            states.forEach(s => {
+                const opt = document.createElement("option");
+                opt.value = s.id;
+                opt.textContent = s.name;
+                stateSelect.appendChild(opt);
+            });
+        }
+
+        async function loadDistricts() {
+            const stateId = document.getElementById("state").value;
+            if (!stateId) return;
+
+            const res = await fetch(`/districts/${stateId}`);
+            const districts = await res.json();
+            const distSelect = document.getElementById("district");
+            distSelect.innerHTML = "<option value=''>--Select District--</option>";
+
+            districts.forEach(d => {
+                const opt = document.createElement("option");
+                opt.value = d.id;
+                opt.textContent = d.name;
+                distSelect.appendChild(opt);
+            });
+        }
+
+        window.onload = loadStates;
+    </script>
+</head>
+<body>
+    <h2>Select State & District</h2>
+    <label>State:</label><br>
+    <select id="state" onchange="loadDistricts()"></select><br><br>
+
+    <label>District:</label><br>
+    <select id="district"></select><br><br>
+</body>
+</html>
